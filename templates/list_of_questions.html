@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="user-input">
+	<h3>list of questions</h3>
+	<ul id="questions">
+		{% for index in range(length) %}
+			<li>{{data[index]['text']}}</li>
+		{% endfor %}
+	</ul>
+	<br>
+</section>
+{% endblock %}

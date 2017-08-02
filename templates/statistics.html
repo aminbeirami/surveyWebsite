@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% block content %}
+
+<table>
+	<tr>the number of users participated:</tr>
+	<tr>{{users}}</tr>
+</table>
+<br>
+<p>statistics of the survey:</p>
+<table>
+	<tr>
+		<th>question asked</th>
+		<th>people who agreed</th>
+		<th>people who denied</th>
+	</tr>
+	{% for index in range(length) %}
+	<tr>
+		<th>{{results[index]['text']}}</th>
+		<th>{{results[index]['answers'][0]}}</th>
+		<th>{{results[index]['answers'][1]}}</th>	
+	</tr>
+	{% endfor %}
+</table>
+{% endblock %}

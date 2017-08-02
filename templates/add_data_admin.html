@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="user-input">
+	<h3>list of questions</h3>
+	<ul id="questions">
+		{% for index in range(length) %}
+			<li>{{data[index]['text']}}</li>
+		{% endfor %}
+	</ul>
+	<br>
+	<h2>Add a question here:</h2>
+	<form action="{{url_for('add_question')}}", method="POST">
+		<p>question: <input type="text" name ="addQuestion"></p>
+		<button type="submit" name="submit-user" value="submit">Add Question</button>
+	</form>
+</section>
+{% endblock %}

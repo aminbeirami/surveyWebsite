@@ -1,0 +1,18 @@
+runtime: python27
+api_version: 1
+threadsafe: yes
+
+handlers:
+- url: /.*
+  script: main.app
+
+libraries:
+- name: MySQLdb
+  version: "latest"
+- name: django
+  version: "1.4"
+env_variables:
+    CLOUDSQL_CONNECTION_NAME: "elemental-leaf-164117:us-central1:surveyproject"
+    CLOUDSQL_USER: "amin"
+    CLOUDSQL_PASSWORD: "amin123"
+    CLOUDSQL_DATABASE: "survey"

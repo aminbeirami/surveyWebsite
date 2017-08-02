@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="texts">
+	<p><a href="{{url_for('add_question')}}"> add more questions </a></p>
+	<p><a href="{{url_for('view_questions')}}"> view list of current questions </a></p>
+	<p><a href="{{url_for('define_user')}}"> add a new user to the system </a></p>
+	<p><a href="{{url_for('visualization')}}"> view the statistics </a></p>
+
+</section>
+
+{% endblock %}
