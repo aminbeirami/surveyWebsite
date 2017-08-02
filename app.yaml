@@ -12,7 +12,7 @@ libraries:
 - name: django
   version: "1.4"
 env_variables:
-    CLOUDSQL_CONNECTION_NAME: "elemental-leaf-164117:us-central1:surveyproject"
-    CLOUDSQL_USER: "amin"
-    CLOUDSQL_PASSWORD: "amin123"
-    CLOUDSQL_DATABASE: "survey"
+    CLOUDSQL_CONNECTION_NAME: "your-connection-name"
+    CLOUDSQL_USER: "your-cloudsql-user"
+    CLOUDSQL_PASSWORD: "your-cloudsql-password"
+    CLOUDSQL_DATABASE: "name-of-the-database-on-cloudql"
