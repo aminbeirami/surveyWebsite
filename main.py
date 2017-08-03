@@ -34,6 +34,10 @@ def session_initialization(isadmin,username):
         session['logged_in'] = True           
         session['user'] = username
         session['role'] = 'user'
+def session_kill():
+    session.pop('logged_in',None)
+    session.pop('user',None)
+    session.pop('role',None)
 
 def is_admin():
     role = session['role']
@@ -53,9 +57,7 @@ def index():
 @app.route("/login", methods=['GET','POST'])
 def login():
     error = None
-    session.pop('logged_in',None)
-    session.pop('user', None)
-    session.pop('role',None)
+    session_kill()
     if request.method =='POST':
         username = request.form['username']
         password = request.form['password']
@@ -83,9 +85,7 @@ def admin():
 
 @app.route("/logout")
 def logout():
-    session.pop("logged_in",None)
-    session.pop("user",None)
-    session.pop("role",None)
+    session_kill()
     flash('you are logged out successfully!')
     return redirect(url_for('login'))
 
