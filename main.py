@@ -16,6 +16,31 @@ def login_required(f):
             return redirect(url_for('login'))
     return wrap
 
+def admin_required(f):
+    @wraps(f)
+    def wrap(*args,**kwargs):
+        if is_admin():
+            return f(*args,**kwargs)
+        else:
+            return redirect(url_for('permission_error'))
+    return wrap
+
+def session_initialization(isadmin,username):
+    if isadmin == True:                               #if the user is admininstrator
+        session['logged_in'] = True
+        session['user'] = username
+        session['role'] = 'admin'
+    else:                                               #if the user is a regular user 
+        session['logged_in'] = True           
+        session['user'] = username
+        session['role'] = 'user'
+
+def is_admin():
+    role = session['role']
+    if role =='admin':
+        return True
+    else:
+        return False
 
 ''' Home '''
 
@@ -34,20 +59,16 @@ def login():
     if request.method =='POST':
         username = request.form['username']
         password = request.form['password']
-        result = fcn.fetch_username_and_password(username,password) 
-        if result[0] !=True:                                    #if the credentials are invalid
-            error = "incorrect credentials"
+        result = fcn.fetch_username_and_password(username,password)
+        if result[0] !=True:
+            error = 'incorrect credentials'
         else:
-            if result[1] == True:                               #if the user is admininstrator
-                session['logged_in'] = True
-                session['user'] = username
-                session['role'] = 'admin'
-                return redirect(url_for('admin'))
-            else:                                               #if the user is a regular user 
-                session['logged_in'] = True           
-                session['user'] = username
-                session['role'] = 'user'
-                return redirect(url_for('answers'))
+            session_initialization(result[1],username)
+    if 'role' in session:
+        if is_admin():
+            return redirect(url_for('admin'))
+        else:
+            return redirect(url_for('answers'))
     return render_template('login.html', error = error)
 
 ''' the administrator's page '''
@@ -55,17 +76,18 @@ def login():
 @app.route('/admin')
 @login_required
 def admin():
-    role = session['role']
-    if role !="admin":
-        return redirect(url_for('permission_error'))
-    else:
+    if is_admin():
         return render_template('admin.html')
+    else:
+        return redirect(url_for('permission_error'))     
 
 '''logout route '''
 
 @app.route("/logout")
 def logout():
     session.pop("logged_in",None)
+    session.pop("user",None)
+    session.pop("role",None)
     flash('you are logged out successfully!')
     return redirect(url_for('login'))
 
@@ -95,8 +117,8 @@ def success():
 
 @app.route('/adduser', methods = ['GET','POST'])
 @login_required
+@admin_required
 def define_user():
-    role = session['role']
     if request.method =='GET':
         return render_template('add_user.html')
     else:
@@ -114,6 +136,7 @@ def permission_error():
 
 @app.route("/addDataAdmin", methods=['POST','GET'])
 @login_required
+@admin_required
 def add_question():
         questionList = fcn.questions_statistics()
         if request.method == 'GET':
@@ -126,6 +149,7 @@ def add_question():
 
 @app.route('/visualization', methods=['GET'])
 @login_required 
+@admin_required
 def visualization():
     results = fcn.questions_statistics()
     noUsersAnswered = len(fcn.users_answered())
@@ -135,6 +159,7 @@ def visualization():
 
 @app.route('/viewQuestions')
 @login_required
+@admin_required
 def view_questions():
     results = fcn.questions_statistics()
     lengthOfResults = len(results)

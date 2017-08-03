@@ -1,5 +1,6 @@
 from lib import mySQLCon as mc
 from collections import defaultdict
+from werkzeug.security import generate_password_hash, check_password_hash
 from lib.config import *
 import os
 
@@ -48,22 +49,28 @@ def split_and_save(sessionKey, answers): #should be changed
 def hashing_and_save(user_list):
     db = connect_to_DB()
     sql = "INSERT INTO users(username,password,isadmin) VALUES(%s,%s,%s)"
-    parameters = (user_list[0][1],user_list[1][1],False)
+    username = user_list[0][1]
+    password = generate_password_hash(user_list[1][1])
+    parameters = (username,password,False)
     db.insert(sql,parameters)
     db.commit()
 
 def fetch_username_and_password(username,password):
     db = connect_to_DB()
-    sql = "SELECT username, isadmin FROM users WHERE username = (%s) AND password = (%s)"
-    arguments = (username,password)
+    sql = "SELECT * FROM users WHERE username = %s"
+    arguments = (username,)
     result = db.query(sql,arguments)
     if result:
-        if result[0][1] == 1:
-            isadmin = True
-        else:
-            isadmin = False
-        return (True,isadmin)
-    else:    
+        authentication = check_password_hash(result[0][2],password)
+        if authentication:
+            if result[0][3] == 1:
+                isadmin = True
+            else:
+                isadmin = False
+            return (True,isadmin)
+        else:    
+            return (False,False)
+    else:
         return (False,False)
 
 def pool_of_answers():

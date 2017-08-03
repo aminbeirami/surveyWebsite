@@ -3,9 +3,9 @@ import os
 #MySQL configuration
 
 SERVER = '127.0.0.1'
-USERNAME = "local-username"
-PASSWORD = "local-password"
-DATABASE = "name-of-the-local-database"
+USERNAME = "amin"
+PASSWORD = "amin123"
+DATABASE = "survey"
 
 #SecretKey is used to encrypt the session cookies
 
