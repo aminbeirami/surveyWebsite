@@ -64,7 +64,7 @@ def login():
             error = 'incorrect credentials'
         else:
             session_initialization(result[1],username)
-    if 'role' in session:
+    if 'logged_in' in session:
         if is_admin():
             return redirect(url_for('admin'))
         else:
@@ -75,11 +75,9 @@ def login():
 
 @app.route('/admin')
 @login_required
+@admin_required
 def admin():
-    if is_admin():
-        return render_template('admin.html')
-    else:
-        return redirect(url_for('permission_error'))     
+    return render_template('admin.html')   
 
 '''logout route '''
 
